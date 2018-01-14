@@ -7,6 +7,10 @@ spring-boot/AngularJs forntend for alirizasaral/timetracker (https://hub.docker.
 - Java 1.8 with set JAVA_HOME variable
 - docker
 
+_Important note: If you plan to change the URL of the backend (alirizasaral/timetracker), then change accordingly the forwardUrl property located in application.properties._ 
+
+	/src/main/resources/application.properties # forwardUrl=http://192.168.99.100:8080/records
+
 ## build
 
 run(in this directory):

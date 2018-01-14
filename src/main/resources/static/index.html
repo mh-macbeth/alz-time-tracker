@@ -16,21 +16,33 @@
 		<div ng-controller="timeCntrl" ng-cloak class="ng-cloak">
 			<h3>Record time</h3>
 			<form name="addFrm" ng-submit="addTime()">
-				<input type="text" name="addStart" ng-model="addStart" required />
-				<input type="text" name="addEnd" ng-model="addEnd" required />
-				<input type="email" name="addEmail" ng-model="addEmail" required />
-				<button ng-disabled="frm.$invalid">Track</button>
+				<div>
+					<label for="addStart">Start: </label> <!-- 28.11.2016 08:00 -->
+					<input type="text" name="addStart" id="addStart" ng-model="addStart" required />
+				</div>
+				<div>
+					<label for="addEnd">End: </label>
+					<input type="text" name="addEnd" id="addEnd" ng-model="addEnd" required />
+				</div>
+				<div>
+					<label for="addEmail">Email: </label>
+					<input type="email" name="addEmail" id="addEmail" ng-model="addEmail" required />
+				</div>
+				<div>
+					<button ng-disabled="frm.$invalid||addButton.disabled">Track</button>
+				</div>
 			</form>
 			<h3>Search by email</h3>
 			<form name="searchFrm" ng-submit="searchTime()">
 				<input type="email" name="searchEmail" ng-model="searchEmail" required />
-				<button ng-disabled="frm.$invalid">Search</button>
+				<button ng-disabled="frm.$invalid||searchButton.disabled">Search</button>
 			</form>
+			<div ng-show="!times[0]">No tracking information</div>
+			<div ng-hide="!times[0]">Email: {{times[0].email}}</div>
 			<ul>
-				<li ng-repeat="x in times">
-				<div>From: {{x.start}}</div>
-				<div>To: {{x.end}}</div>
-				<div>Email: {{x.email}}</div>
+				<li ng-hide="!times[0]" ng-repeat="x in times">
+					<div>From: {{x.start | date : "dd.MM.yyyy HH:mm"}}</div>
+					<div>To: {{x.end | date : "dd.MM.yyyy HH:mm"}}</div>
 				</li>
 			</ul>
 		</div>
