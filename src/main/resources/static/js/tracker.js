@@ -18,6 +18,13 @@ angular.module('tracker', [])
 				$scope.addEnd = '';
 				$scope.addEmail = '';
 				$scope.addButton.disabled=false;
+			}, function(data, status) {
+			    console.log(data);
+			    console.log(status);
+				$scope.addStart = '';
+				$scope.addEnd = '';
+				$scope.addEmail = '';
+				$scope.addButton.disabled=false;
 			});
 		
 		}
@@ -27,6 +34,10 @@ angular.module('tracker', [])
 			
 			$http.get('/times/?email=' + $scope.searchEmail)
 				.then(function(response) {
+					$scope.times = response.data;
+					$scope.searchEmail = '';
+					$scope.searchButton.disabled=false;
+				}, function(response) {
 					$scope.times = response.data;
 					$scope.searchEmail = '';
 					$scope.searchButton.disabled=false;

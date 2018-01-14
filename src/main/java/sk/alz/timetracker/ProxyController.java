@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,10 +35,16 @@ public class ProxyController {
 		RestTemplate rt = new RestTemplate();
 
 		UriComponents uri = UriComponentsBuilder.fromHttpUrl(getUrl()).query("email={email}").buildAndExpand(email);
-		ResponseEntity<String> res = rt.exchange(uri.toUriString(), HttpMethod.GET, null, String.class);
-
-		response.setStatus(res.getStatusCodeValue());
-		return res.getBody();
+		
+		try {
+			ResponseEntity<String> res = rt.exchange(uri.toUriString(), HttpMethod.GET, null, String.class);
+			response.setStatus(res.getStatusCodeValue());
+			return res.getBody();
+		} catch (HttpStatusCodeException e) {
+			e.printStackTrace();
+			response.setStatus(e.getRawStatusCode());
+			return e.getResponseBodyAsString();
+		}
 	}
 
 	@RequestMapping(value = "/times/", method = RequestMethod.POST)
@@ -49,10 +56,15 @@ public class ProxyController {
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params,
 				headers);
-		ResponseEntity<String> res = rt.postForEntity(getUrl(), request, String.class);
-
-		response.setStatus(res.getStatusCodeValue());
-		return res.getBody();
+		try {
+			ResponseEntity<String> res = rt.postForEntity(getUrl(), request, String.class);
+			response.setStatus(res.getStatusCodeValue());
+			return res.getBody();
+		} catch (HttpStatusCodeException e) {
+			e.printStackTrace();
+			response.setStatus(e.getRawStatusCode());
+			return e.getResponseBodyAsString();
+		}
 	}
 
 	private String getUrl() {
